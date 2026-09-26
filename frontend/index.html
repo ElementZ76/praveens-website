@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Praveen — Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <h1>Praveen</h1>
+      <p>Computer science student. I test software and build tools that break it first.</p>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="about">
+      <h2>About</h2>
+      <p>
+        I'm a fourth-year CS student at SRMIST, graduating in 2028. I work on test
+        automation — writing code whose job is to check that other code behaves.
+      </p>
+      <p id="more-about" class="hidden">
+        Most of my time goes into Selenium and REST Assured frameworks, plus a
+        research project on predicting cloud traffic before it arrives.
+      </p>
+      <button id="toggle-btn">Read more</button>
+    </section>
+
+    <section id="skills">
+      <h2>Skills</h2>
+      <ul id="skills-list" class="card-list"></ul>
+    </section>
+
+    <section id="projects">
+      <h2>Projects</h2>
+      <ul id="projects-list" class="card-list"></ul>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <input type="text" id="name" placeholder="Your name">
+      <input type="email" id="email" placeholder="Your email">
+      <textarea id="message" rows="4" placeholder="Your message"></textarea>
+      <button id="send-btn">Send message</button>
+      <p id="form-status"></p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year"></span> Praveen</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

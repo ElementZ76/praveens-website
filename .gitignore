@@ -1,0 +1,22 @@
+# Java / Maven
+target/
+*.class
+
+# Node / Vite
+node_modules/
+dist/
+
+# Secrets — never commit real values; .env.example documents the variable names
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Editors / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
