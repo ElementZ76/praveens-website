@@ -1,10 +1,10 @@
 const skills = ["Java", "Python", "Selenium", "REST Assured", "SQL", "Git"];
 
 const projects = [
-  { name: "Flipkart E2E test framework", detail: "Selenium + Cucumber, Java" },
-  { name: "Predictive cloud autoscaling", detail: "Forecasting traffic on AWS" },
-  { name: "FuelTrack AI",                detail: "Vehicle fuel and telemetry tracker" },
-  { name: "Prashanthi Delights",         detail: "WooCommerce store, live in production" }
+  { name: "Enterprise Test Automation Framework", detail: "Selenium Grid, Cucumber, TestNG, POM, Maven, Allure, Log4j2" },
+  { name: "Proactive Cloud Autoscaling (AIOps)",  detail: "Python, AWS (EC2, Lambda, S3, SageMaker), scikit-learn, Locust" },
+  { name: "FuelTrack Webapp",                     detail: "React, FastAPI, SQLite, Python, REST APIs" },
+  { name: "Prashanthi Delights",                  detail: "WooCommerce store, live in production" }
 ];
 
 const skillsList = document.getElementById("skills-list");

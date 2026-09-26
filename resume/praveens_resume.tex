@@ -1,0 +1,173 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.7in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \vspace{-6pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-9pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-9pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-9pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    {\Huge\bfseries\scshape Praveen PR \\}
+    \vspace{1pt}
+    \small
+    \href{mailto:pprj2005@gmail.com}{pprj2005@gmail.com} $|$
+    \href{https://linkedin.com/in/praveen-pr190705}{linkedin.com/in/praveen-pr190705} $|$
+    \href{https://github.com/ElementZ76}{github.com/ElementZ76}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {SRM Institute of Science and Technology}{Jun. 2023 -- Aug. 2028}
+      {M.Tech Integrated in Computer Science and Engineering (Core) \;|\; \textbf{CGPA: 9.06}}{Chennai, India}
+  \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Java, Python, C/C++, SQL/MySQL, HTML/CSS} $|$ \textbf{Data Formats}{: JSON, YAML} \\
+     \textbf{Frameworks \& Tools}{: TestNG, Selenium WebDriver, Selenium Grid, Cucumber, REST Assured, Spring, Spring Boot} \\
+     \textbf{Testing Concepts}{: BDD, Page Object Model, Data-Driven Testing, API Testing, Parallel Execution, Tag-Based Suites} \\
+     \textbf{Reporting \& Tools}{: Allure Reports, Extent Reports, Log4j2, Maven, Git, GitHub Actions, Eclipse, VS Code, IntelliJ} \\
+     \textbf{Cloud \& DevOps}{: CI/CD Pipelines (GitHub Actions), Google Cloud Platform (Google Cloud Skills Boost labs)}
+    }}
+ \end{itemize}
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+  \resumeSubheading
+      {Vista Lane Dynamic Solutions}{Feb. 2026 -- Jul. 2026}
+      {Test Automation Engineer Intern}{Chennai, India}
+      \resumeItemListStart
+        \resumeItem{Architected a scalable end-to-end automation framework using Selenium WebDriver and Java, building reusable Page Object Model components to accelerate test scripting}
+        \resumeItem{Engineered a data-driven testing infrastructure integrating Cucumber BDD, creating modular suites built to scale cross-browser validation across multiple portals}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Titan Company Limited}{Jun. 2025 -- Aug. 2025}
+      {UI/UX Engineering Intern}{Electronics City, Bengaluru}
+      \resumeItemListStart
+        \resumeItem{Resolved 10+ cross-browser UI bugs across Tanishq, Mia by Tanishq, and Titan portals using Chrome DevTools, improving visual consistency and responsive design on product listing pages}
+        \resumeItem{Audited 3 e-commerce platforms against Nielsen's usability heuristics, surfacing actionable design gaps adopted by the front-end team}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {AIESEC in Chennai}{}
+      {Senior Product Manager}{Jan. 2026 -- Present}
+      \resumeItemListStart
+        \resumeItem{Drive end-to-end lead conversion pipeline for global volunteership programs, coordinating across marketing and outreach functions}
+    \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{Enterprise Test Automation Framework} $|$ \emph{Selenium Grid, Cucumber, TestNG, POM, Maven, Allure, Log4j2}}{\href{https://github.com/ElementZ76/Test-Automation-Framework-Internal}{GitHub}}
+          \resumeItemListStart
+            \resumeItem{Architected a production-grade BDD framework using Cucumber Gherkin and POM; enabled tag-based test suites (smoke, regression, negative) with centralized \texttt{config.properties} for zero-code environment switching}
+            \resumeItem{Scaled distributed execution across Chrome, Firefox, and Edge via Selenium Grid; configured GitHub Actions workflow for automated nightly builds with Allure reporting, failure screenshots, and Log4j2 structured logging}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Proactive Cloud Autoscaling (AIOps)} $|$ \emph{Python, AWS (EC2, Lambda, S3, SageMaker), scikit-learn, Locust}}{}
+          \resumeItemListStart
+            \resumeItem{Built an AWS pipeline: Flask app on an EC2 Auto Scaling Group, Locust load generation, CloudWatch metrics into an S3 data lake via Lambda, and a SageMaker real-time model endpoint}
+            \resumeItem{Compared Random Forest vs.\ a Prophet-style model (Fourier + Ridge) with walk-forward validation on a 30-day synthetic workload; at a 4-hour horizon, R$^2$ held at 0.89 vs.\ 0.25 for Random Forest}
+          \resumeItemListEnd
+        \resumeProjectHeading
+              {\textbf{FuelTrack Webapp} $|$ \emph{React, FastAPI, SQLite, Python, REST APIs}}{\href{https://github.com/ElementZ76/Fuel-Track}{GitHub}}
+          \resumeItemListStart
+            \resumeItem{Full-stack vehicle expenditure tracking application, enabling seamless management of fuel logs and maintenance records, by integrating a React frontend with a FastAPI backend and SQLite DB}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------PUBLICATIONS-----------
+\section{Publications}
+Selvameena P, \textbf{Praveen PR}, Nischit Etha, Malathi D, ``Proactive Cloud Autoscaling Using Predictive Time Series Forecasting,'' accepted at IEEE ICONAT 2026, Goa, India. To be published.
+
+%-----------CERTIFICATIONS-----------
+\section{Achievements \& Certifications}
+Google Cloud Skills Boost (formerly Qwiklabs) $\bullet$ NPTEL: Introduction to Machine Learning $\bullet$ Udemy: Full-Stack Web Dev Bootcamp
+
+\end{document}

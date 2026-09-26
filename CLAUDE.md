@@ -12,11 +12,18 @@ Built with the B.L.A.S.T. framework (Blueprint → Link → Architect → Styliz
 
 Do not start a phase before the previous one is checked off and Praveen has approved moving on.
 
+## Resume is the source of truth for content
+
+- `resume/praveens_resume.tex` decides what the site shows: education, skills, experience, projects, publications, certifications. If something is not on the resume, it does not belong on the site.
+- **Exception:** entries explicitly marked as manual (currently only the Prashanthi Delights project) stay even though they are not on the resume.
+- **Never commit or display the phone number.** The original resume (with phone) sits in the project root as `praveens_resume.tex` and is gitignored. Only the copy in `resume/` (phone removed) is committed. When Praveen provides an updated resume, copy it into `resume/` and remove the phone line before committing.
+
 ## Structure
 
 ```
 praveen-website/
 ├── CLAUDE.md, blueprint.md, task_plan.md, progress.md
+├── resume/            praveens_resume.tex — the resume, phone number removed
 ├── frontend/          vanilla HTML/CSS/JS today; becomes a React (Vite) app in Phase S
 │   ├── index.html
 │   ├── css/styles.css
@@ -35,6 +42,7 @@ praveen-website/
 
 Praveen is learning backend development and has never built a backend before.
 
+- **Design is done by Praveen too:** the database schema and the API endpoints. Claude teaches the concepts first, then reviews Praveen's design. Claude does not draft them.
 - **Backend code is written by Praveen.** Claude explains the concept first with a concrete example, breaks the work into small steps, gives hints before full answers, and reviews Praveen's code as if a stranger wrote it (most serious problems first).
 - Claude writes backend code only when Praveen explicitly asks for it in that moment.
 - Setup/tooling (Phase L, run scripts, config) Claude may do, explaining each step; Praveen runs the key commands.

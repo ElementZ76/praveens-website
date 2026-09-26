@@ -11,6 +11,9 @@ dist/
 .env.*
 !.env.example
 
+# Original resume with phone number — only resume/praveens_resume.tex (no phone) is committed
+/praveens_resume.tex
+
 # Logs
 *.log
 
