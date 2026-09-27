@@ -1,6 +1,6 @@
 # Blueprint — Praveen's Portfolio
 
-> **Status: DRAFT v0.2 — not approved.** Phase L starts only after Praveen approves this file.
+> **Status: DRAFT v0.3 — not approved.** Phase L starts only after Praveen approves this file.
 > This is the project constitution. If code and blueprint disagree, the blueprint wins. Change this file first, then the code, and add a line to the change log.
 
 ---
@@ -62,27 +62,94 @@ Browser
 | API tests | JUnit 5 + Spring Boot Test + REST Assured | Written alongside each endpoint in Phase A |
 | E2E tests | Selenium or Playwright | Chosen in Phase T |
 
-## 5. Data schema — **to be designed by Praveen**
+## 5. Data schema
 
-Praveen designs the tables, columns, keys and constraints. Claude teaches the concepts first, then reviews the design. The schema must satisfy these requirements:
+Decided by Praveen through the design questions; SQL written by Claude and reviewed together.
 
-**From the resume**
-- **Education:** institution, degree, start and end dates, CGPA, location.
-- **Skills:** each skill belongs to one category, exactly as named on the resume (currently Languages, Data Formats, Frameworks & Tools, Testing Concepts, Reporting & Tools, Cloud & DevOps). Categories can be added, renamed or removed when the resume changes. The order of categories, and of skills within a category, matches the resume.
-- **Experience:** organization, role, start date, end date *or* "Present", location (may be missing), and an ordered list of bullet points.
-- **Projects:** name, a list of technologies, an optional GitHub link, and an ordered list of bullet points. Technologies are **not** the same list as skills: many project technologies (AWS, React, Locust, …) are not in the Skills section, and the website's Skills section must match the resume exactly.
-- **Publications:** ordered author list (Praveen's name marked), title, venue/conference, status (e.g. "accepted, to be published").
-- **Certifications:** a list of names, in resume order.
+**Design decisions**
+- **Sync strategy: upsert.** Each resume entry is matched to its row by a natural key (the `UNIQUE` columns below), then inserted or updated. After the upserts, resume rows whose key was not in the file are deleted.
+- **Natural keys:** education = institution + degree · skill category = name · experience = organization + role · project = name · publication = title · certification = name.
+- **Manual rows:** `projects.source` is `'RESUME'` or `'MANUAL'`. The sync only touches `'RESUME'` rows. If a manual project later appears on the resume, the upsert switches it to `'RESUME'`.
+- **Dates:** month precision, stored as the 1st of the month (`Jun. 2023` → `2023-06-01`). `end_date` is `NULL` while ongoing; the frontend shows "Present".
+- **Order:** every list shown on the resume has a stored `position` (the database keeps no order on its own). Lists stored as arrays keep their order inside the array.
+- **Arrays vs tables:** a list of plain values that is only displayed is an array (`technologies`, `bullets`, `skills`, `authors`). Items keep their order inside an array, so arrays need no `position`. A list whose items carry their own facts would need its own table; none do today. A fact about the whole list is a column on the row (`self_author` marks which author is Praveen).
 
-**Beyond the resume**
-- **Manual entries:** some rows are added by hand and are not on the resume (currently the Prashanthi Delights project). The resume sync must never change or delete these rows. The schema needs a way to tell the two apart.
-- **Contact messages:** name, email, message text, time received.
+**Tables** (PostgreSQL)
 
-**Things to think about while designing**
-- Which columns are required and which are optional?
-- Which lists need a stored order (the database does not keep insertion order on its own)?
-- What makes a row unique, so the parser can tell "this project already exists, update it" from "this is a new project"?
-- What should happen to child rows (bullet points) when their parent (a project) is deleted?
+```sql
+CREATE TABLE education (
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    institution VARCHAR(150) NOT NULL,
+    degree      VARCHAR(200) NOT NULL,
+    cgpa        NUMERIC(4,2) CHECK (cgpa BETWEEN 0 AND 10),
+    location    VARCHAR(100),
+    start_date  DATE NOT NULL,
+    end_date    DATE,                                   -- NULL = ongoing
+    position    INT  NOT NULL,
+    UNIQUE (institution, degree),
+    CHECK (end_date IS NULL OR end_date >= start_date)
+);
+
+CREATE TABLE skill_categories (
+    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name     VARCHAR(50) NOT NULL UNIQUE,               -- "Frameworks & Tools"
+    skills   TEXT[]      NOT NULL DEFAULT '{}',         -- in resume order
+    position INT         NOT NULL
+);
+
+CREATE TABLE experiences (
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    organization VARCHAR(150) NOT NULL,
+    role         VARCHAR(150) NOT NULL,
+    location     VARCHAR(100),
+    start_date   DATE   NOT NULL,
+    end_date     DATE,                                  -- NULL = "Present"
+    bullets      TEXT[] NOT NULL DEFAULT '{}',
+    position     INT    NOT NULL,
+    UNIQUE (organization, role),
+    CHECK (end_date IS NULL OR end_date >= start_date)
+);
+
+CREATE TABLE projects (
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name         VARCHAR(150) NOT NULL UNIQUE,
+    technologies TEXT[]       NOT NULL DEFAULT '{}',
+    bullets      TEXT[]       NOT NULL DEFAULT '{}',
+    github_url   VARCHAR(500),
+    source       VARCHAR(10)  NOT NULL DEFAULT 'RESUME' CHECK (source IN ('RESUME', 'MANUAL')),
+    position     INT          NOT NULL
+);
+
+CREATE TABLE publications (
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title       VARCHAR(300) NOT NULL UNIQUE,
+    authors     TEXT[]       NOT NULL,                  -- in the order printed on the paper
+    self_author INT          NOT NULL,                  -- which author is Praveen (1 = first)
+    venue       VARCHAR(200) NOT NULL,
+    status      VARCHAR(100),
+    position    INT          NOT NULL,
+    CHECK (self_author BETWEEN 1 AND cardinality(authors))   -- cardinality('{}') = 0, so an empty list is rejected
+);
+
+CREATE TABLE certifications (
+    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name     VARCHAR(200) NOT NULL UNIQUE,
+    position INT NOT NULL
+);
+
+-- Written by visitors; never touched by the resume sync.
+CREATE TABLE contact_messages (
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name       VARCHAR(100)  NOT NULL,
+    email      VARCHAR(254)  NOT NULL,
+    message    VARCHAR(5000) NOT NULL,
+    created_at TIMESTAMPTZ   NOT NULL DEFAULT now()
+);
+```
+
+**Connections:** none. Every table stands alone: each resume entry is complete in one row, with its lists stored as arrays. If a future feature needs linked data (e.g. admin users → sessions), it gets foreign keys then.
+
+**Seed data:** the manual Prashanthi Delights project (`source = 'MANUAL'`) is inserted by a Flyway migration. Everything else comes from the resume sync.
 
 ## 6. API endpoints — **to be designed by Praveen**
 
@@ -143,7 +210,7 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 
 | Phase | Who does what |
 |---|---|
-| B — Blueprint | **Praveen designs the schema (§5) and endpoints (§6)**; Claude teaches the concepts first, then reviews. Claude drafts the rest; Praveen decides and approves. |
+| B — Blueprint | Claude teaches the concepts first. Praveen makes the design decisions for the schema (§5) and endpoints (§6); Claude writes the SQL/spec from those decisions, and Praveen questions and approves it. Claude drafts the rest. |
 | L — Link | Claude sets up tools and explains each step; Praveen runs the key commands. |
 | A — Architect | **Praveen writes the code**, including the resume parser. Claude explains, gives steps and hints, reviews. |
 | S — Stylize | Praveen leads the React work; Claude guides and reviews. |
@@ -162,3 +229,4 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 |---|---|---|
 | 0.1 | 2026-09-26 | First draft from discovery answers. |
 | 0.2 | 2026-09-26 | Resume becomes the single source of truth; added all resume sections, resume parser (§7) and manual-entry exception. Schema (§5) and endpoints (§6) cleared: Praveen designs them. |
+| 0.3 | 2026-09-27 | Schema (§5) agreed: upsert sync with natural keys, `source` column for manual rows, NULL end date = ongoing, bullets, technologies, skills and authors as arrays (`self_author` marks Praveen). 7 tables, no foreign keys. |

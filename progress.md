@@ -5,6 +5,29 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 
 ---
 
+## 2026-09-27 — Phase B (Blueprint): schema
+
+**Done**
+- Schema lesson (tables, types, keys, constraints, relationships, order, natural keys, normalization).
+- Praveen's design answers reviewed; schema agreed in `blueprint.md` §5 (v0.3): 7 tables, no foreign keys, upsert sync, `source` column for manual rows, `NULL` end date = ongoing.
+- Simplified step by step on Praveen's questions: bullets → arrays, skills → array on `skill_categories`, authors → array + `self_author` on `publications`.
+- Working agreement updated: Praveen makes design decisions, Claude writes the SQL/spec from them; explanations use resume data and small row examples.
+
+**Errors**
+- `blueprint.md` was overwritten on disk by the old v0.1 (likely an editor tab saving a stale copy). Praveen restored it with `git restore blueprint.md`.
+- `CHECK (... array_length(authors, 1))` would let an empty list through: `array_length` of an empty array is `NULL`, and a `CHECK` that evaluates to `NULL` passes. → Use `cardinality(authors)`, which returns 0.
+
+**Learned**
+- Rows in a table have no guaranteed order; items inside an array keep theirs.
+- Foreign key goes on the "many" side; a foreign key can reference only one table.
+- A list of plain display values can be an array; items with their own facts need a table.
+- `CHECK` only rejects when the condition is `false`, not when it is `NULL`.
+
+**Next**
+- HTTP/REST lesson → Praveen's decisions for the endpoints (§6).
+
+---
+
 ## 2026-09-26 (continued) — Phase B (Blueprint)
 
 **Done**

@@ -42,7 +42,8 @@ praveen-website/
 
 Praveen is learning backend development and has never built a backend before.
 
-- **Design is done by Praveen too:** the database schema and the API endpoints. Claude teaches the concepts first, then reviews Praveen's design. Claude does not draft them.
+- **Design decisions are Praveen's:** for the database schema and the API endpoints, Claude teaches the concepts first and asks the design questions; Praveen answers them. Claude then writes the SQL/spec from those answers, points out mistakes in the answers plainly, and Praveen questions and approves the result.
+- **Explanations must be simple.** Use Praveen's own data (the resume) as examples, show small sample tables of rows, one idea at a time. Avoid jargon; if a term is needed, define it in one sentence. Praveen knows intermediate SQL.
 - **Backend code is written by Praveen.** Claude explains the concept first with a concrete example, breaks the work into small steps, gives hints before full answers, and reviews Praveen's code as if a stranger wrote it (most serious problems first).
 - Claude writes backend code only when Praveen explicitly asks for it in that moment.
 - Setup/tooling (Phase L, run scripts, config) Claude may do, explaining each step; Praveen runs the key commands.

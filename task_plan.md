@@ -11,7 +11,7 @@
 - [x] Discovery questions answered (features, stack, database, DB access, frontend, project fields)
 - [x] `blueprint.md`, `task_plan.md`, `progress.md` created
 - [x] Resume adopted as single source of truth; committed copy without phone in `resume/`
-- [ ] Lesson: tables, keys, relationships, constraints → **Praveen designs schema (§5)** → review
+- [x] Lesson: tables, keys, relationships, constraints → Praveen's design decisions → schema (§5) agreed
 - [ ] Lesson: HTTP methods, status codes, REST, error formats → **Praveen designs endpoints (§6)** → review
 - [ ] Decide when the resume sync runs (§12.1) and the AIESEC entry quirk (§12.2)
 - [ ] Invariants final
