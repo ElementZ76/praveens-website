@@ -1,6 +1,6 @@
 # Blueprint — Praveen's Portfolio
 
-> **Status: DRAFT v0.3 — not approved.** Phase L starts only after Praveen approves this file.
+> **Status: APPROVED v1.0 (2026-09-27).** Changes from here on: update this file first, bump the version, add a change-log line.
 > This is the project constitution. If code and blueprint disagree, the blueprint wins. Change this file first, then the code, and add a line to the change log.
 
 ---
@@ -151,28 +151,108 @@ CREATE TABLE contact_messages (
 
 **Seed data:** the manual Prashanthi Delights project (`source = 'MANUAL'`) is inserted by a Flyway migration. Everything else comes from the resume sync.
 
-## 6. API endpoints — **to be designed by Praveen**
+## 6. API endpoints
 
-Praveen designs the methods, paths, request/response bodies, status codes and error format. Claude teaches HTTP and REST concepts first, then reviews. The API must let the frontend:
+Decided by Praveen through the design questions; spec written by Claude and reviewed together.
 
-1. Load every resume section shown on the page.
-2. Send a contact message, and learn whether it was accepted, rejected (and why, per field), or blocked for sending too many.
-3. Check that the backend is running (health check, used by hosting providers and by `run_dev.ps1`).
+**Design decisions**
+- **One read endpoint** for the whole resume: the page shows every section at once, so one request loads everything.
+- **The JSON carries only what the frontend displays.** No `id`, `position` or `source`: the lists arrive already sorted, and manual and resume projects look the same on the page.
+- **The API sends data, the frontend formats it.** Dates are sent as `"YYYY-MM"` (e.g. `"2026-01"`); an ongoing role has `"endDate": null`, and the frontend shows "Present". Links are sent as plain URL text; the frontend turns them into links (invariant 9: no HTML from the API).
+- **JSON names are camelCase** (`githubUrl`), matching both Java and JavaScript.
+- **Errors use one format everywhere**, based on RFC 9457 "Problem Details" (`Content-Type: application/problem+json`), with an `errors` list for field problems.
+- **No endpoint for the resume sync.** It is a separate command (§7), so nobody on the internet can trigger it.
 
-**Required behavior for the contact message**
-- The server validates every field, even if the browser already did: after trimming, name 1–100 characters, email a valid format and at most 254 characters, message 1–5000 characters.
-- Honeypot: the form has a field hidden from humans with CSS. Bots fill every field. If it is filled, the server responds exactly as for a real success but stores nothing. A bot must not be able to tell the difference from the response.
+| Method | Path | Request body | Success | Errors |
+|---|---|---|---|---|
+| GET | `/api/health` | – | `200` `{"status":"UP"}` | – |
+| GET | `/api/resume` | – | `200` resume JSON (below) | `500` |
+| POST | `/api/contact` | `{"name","email","message","website"}` | `201` `{"status":"received"}` | `400`, `429` |
+
+### `GET /api/resume` → `200`
+
+```json
+{
+  "education": [
+    { "institution": "SRM Institute of Science and Technology",
+      "degree": "M.Tech Integrated in Computer Science and Engineering (Core)",
+      "cgpa": 9.06, "location": "Chennai, India",
+      "startDate": "2023-06", "endDate": "2028-08" }
+  ],
+  "skills": [
+    { "category": "Languages", "items": ["Java", "Python", "C/C++", "SQL/MySQL", "HTML/CSS"] }
+  ],
+  "experience": [
+    { "organization": "AIESEC in Chennai", "role": "Senior Product Manager",
+      "location": "Chennai, India", "startDate": "2026-01", "endDate": null,
+      "bullets": ["Drive end-to-end lead conversion pipeline ..."] }
+  ],
+  "projects": [
+    { "name": "FuelTrack Webapp",
+      "technologies": ["React", "FastAPI", "SQLite", "Python", "REST APIs"],
+      "bullets": ["Full-stack vehicle expenditure tracking application ..."],
+      "githubUrl": "https://github.com/ElementZ76/Fuel-Track" }
+  ],
+  "publications": [
+    { "title": "Proactive Cloud Autoscaling Using Predictive Time Series Forecasting",
+      "authors": [ { "name": "Selvameena P", "self": false },
+                   { "name": "Praveen PR",   "self": true } ],
+      "venue": "IEEE ICONAT 2026, Goa, India", "status": "Accepted, to be published" }
+  ],
+  "certifications": ["Google Cloud Skills Boost (formerly Qwiklabs)", "NPTEL: Introduction to Machine Learning"]
+}
+```
+(Examples shortened. Every list is in resume order; manual projects come after resume projects.)
+
+- Optional values are `null` (e.g. a project without `githubUrl`), never left out, so the frontend always sees the same fields.
+- `authors` is built from the `authors` array + `self_author` column: the API marks the author instead of sending an index, because PostgreSQL counts list items from 1 and JavaScript from 0 (an easy off-by-one bug).
+
+### `POST /api/contact`
+
+**Request**
+```json
+{ "name": "Asha", "email": "asha@example.com", "message": "Loved your framework project!", "website": "" }
+```
+
+**Rules**
+- The server validates every field, even if the browser already did: after trimming, `name` 1–100 characters, `email` a valid format and at most 254 characters, `message` 1–5000 characters.
+- `website` is the honeypot: hidden from humans with CSS; bots fill every field. If it is not empty, the server returns the normal `201` response and stores nothing.
 - Rate limit: at most 5 messages per IP address per hour.
 
-**Decisions for the endpoint design**
-- Resource names and URL structure (one endpoint per section, or one for the whole resume?).
-- Status codes for success, invalid input and too many requests.
-- One consistent error format across all endpoints (worth reading about: RFC 9457 "Problem Details", which Spring Boot supports).
-- JSON naming style (camelCase or snake_case) and date format.
-- How the resume sync is triggered (see §7).
+**`201 Created`** (real message saved, or honeypot triggered — identical)
+```json
+{ "status": "received" }
+```
+
+**`400 Bad Request`** — one entry per invalid field, so the frontend can show each message next to its field
+```json
+{
+  "type": "about:blank",
+  "title": "Invalid input",
+  "status": 400,
+  "detail": "Some fields are invalid.",
+  "errors": [
+    { "field": "email",   "message": "Enter a valid email address." },
+    { "field": "message", "message": "Message cannot be empty." }
+  ]
+}
+```
+
+**`429 Too Many Requests`** — plus a `Retry-After` header with the number of seconds to wait
+```json
+{
+  "type": "about:blank",
+  "title": "Too many messages",
+  "status": 429,
+  "detail": "You can send up to 5 messages per hour. Try again later."
+}
+```
+
+**`500 Internal Server Error`** (any endpoint) — same format, with a generic `detail`. Never includes stack traces or SQL: those help attackers and mean nothing to visitors.
 
 ## 7. Resume parser (sync)
 
+- **Trigger:** a separate command, run by hand after the resume changes (not at backend startup, not on every deploy).
 - **Input:** `resume/praveens_resume.tex` (the committed copy, without phone number).
 - **Strict:** it recognizes the template's commands (`\section`, `\resumeSubheading`, `\resumeProjectHeading`, `\resumeItem`, …). If the file contains a structure it does not recognize, it stops with a clear error and **the database is not changed**.
 - **Plain text out:** LaTeX markup is converted to plain text before storing (e.g. `\&` → `&`, `` ``…'' `` → "…", `R$^2$` → R², `\textbf{…}` → the text inside).
@@ -180,7 +260,7 @@ Praveen designs the methods, paths, request/response bodies, status codes and er
 - **Idempotent:** running the sync twice on the same file gives the same database as running it once. No duplicates.
 - **Manual rows are untouched** (see §5).
 - **Privacy guard:** if the file contains something that looks like a phone number, the sync refuses to run.
-- **Known template quirk:** the AIESEC entry puts its dates in the location slot and leaves the date slot empty. The parser must handle this, or the resume entry should be fixed (see §12).
+- **Every `\resumeSubheading` uses the same slot order:** {organization}{dates}{role}{location}. The parser does not handle other layouts; it stops with an error. (The AIESEC entry is being fixed in the resume to follow this order.)
 
 ## 8. Invariants (rules that must always hold)
 
@@ -218,8 +298,8 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 
 ## 12. Open questions
 
-1. When does the resume sync run: at backend startup, as a separate command, or during deployment? (Decide while designing §6.)
-2. AIESEC entry: fix the resume so dates are in the date slot like the other entries, or make the parser handle it?
+1. ~~When does the resume sync run?~~ Decided: a separate command (§7).
+2. ~~AIESEC entry layout?~~ Decided: Praveen fixes the resume; the parser expects one slot order (§7). Waiting for the updated resume file.
 3. Hosting provider and domain name — Phase T.
 4. E2E test tool — Phase T.
 
@@ -230,3 +310,5 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 | 0.1 | 2026-09-26 | First draft from discovery answers. |
 | 0.2 | 2026-09-26 | Resume becomes the single source of truth; added all resume sections, resume parser (§7) and manual-entry exception. Schema (§5) and endpoints (§6) cleared: Praveen designs them. |
 | 0.3 | 2026-09-27 | Schema (§5) agreed: upsert sync with natural keys, `source` column for manual rows, NULL end date = ongoing, bullets, technologies, skills and authors as arrays (`self_author` marks Praveen). 7 tables, no foreign keys. |
+| 0.4 | 2026-09-27 | Endpoints (§6): `GET /api/health`, `GET /api/resume`, `POST /api/contact`; Problem Details errors; resume sync is a separate command; AIESEC entry to be fixed in the resume. |
+| 1.0 | 2026-09-27 | **Approved by Praveen.** |

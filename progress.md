@@ -5,6 +5,24 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 
 ---
 
+## 2026-09-27 (continued) — Phase B (Blueprint): endpoints + approval
+
+**Done**
+- HTTP lesson (request/response, GET vs POST, status codes, JSON).
+- Endpoints agreed in `blueprint.md` §6: `GET /api/health`, `GET /api/resume` (one call for the whole page), `POST /api/contact` (201 / 400 / 429), Problem Details error format with a per-field `errors` list.
+- Resume sync decided as a separate command (no HTTP endpoint). AIESEC entry to be fixed in the resume itself.
+- **Blueprint approved: v1.0.** Phase B complete.
+
+**Learned**
+- The JSON sent to the frontend is shaped for the page, not copied from the table (no `id`/`position`/`source`; authors as `{name, self}` objects).
+- PostgreSQL arrays count from 1, JavaScript from 0: converting in one place avoids off-by-one bugs.
+- The API sends data (URLs, `"2026-01"`, `null`); the frontend decides how to display it.
+
+**Next**
+- Phase L: check Spring Boot version, install JDK 25, generate the backend project.
+
+---
+
 ## 2026-09-27 — Phase B (Blueprint): schema
 
 **Done**
