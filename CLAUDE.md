@@ -12,6 +12,15 @@ Built with the B.L.A.S.T. framework (Blueprint → Link → Architect → Styliz
 
 Do not start a phase before the previous one is checked off and Praveen has approved moving on.
 
+## Deadline and scope discipline
+
+- **Launch is fixed: Sunday 2026-12-27.** Milestones M1–M5 with due dates and hour budgets are in `task_plan.md`. Praveen has ~5 h/week.
+- At the start of each session, say in one line: current milestone, its due date, and what is left in it.
+- Keep work inside the current milestone. When Praveen (or Claude) has a new idea, add it to "Later" in `task_plan.md` instead of doing it now, and say so.
+- If a milestone is going to miss its due date, say so early and propose cuts from the cut list. Never quietly extend.
+- If a task runs past 2× its estimate, stop and propose a simpler approach.
+- Log hours spent in each `progress.md` entry.
+
 ## Resume is the source of truth for content
 
 - `resume/praveens_resume.tex` decides what the site shows: education, skills, experience, projects, publications, certifications. If something is not on the resume, it does not belong on the site.
@@ -35,7 +44,11 @@ praveen-website/
 
 - Frontend (current): open `frontend/index.html` in a browser. No build step.
   To serve over http: `cd frontend; python -m http.server 5500` → http://localhost:5500
-- Backend: filled in during Phase L.
+- Backend (run from `backend/`): `.\mvnw.cmd spring-boot:run` → http://localhost:8081. Always use the Maven Wrapper (`mvnw.cmd`), never plain `mvn`.
+  Needs `JAVA_HOME` = JDK 25 (set by the scoop install). Plain `java` on PATH is still Oracle 22; don't call it directly.
+- Tests (from `backend/`): `.\mvnw.cmd test`
+- Local DB setup (once, asks for the `postgres` superuser password, so Praveen runs it): `.\backend\scripts\create-local-db.ps1`
+- Settings: `backend/.env` (gitignored, holds the DB password) — template in `backend/.env.example`.
 - React dev server: filled in during Phase S.
 
 ## Working agreement (learning mode)
@@ -46,7 +59,7 @@ Praveen is learning backend development and has never built a backend before.
 - **Explanations must be simple.** Use Praveen's own data (the resume) as examples, show small sample tables of rows, one idea at a time. Avoid jargon; if a term is needed, define it in one sentence. Praveen knows intermediate SQL.
 - **Backend code is written by Praveen.** Claude explains the concept first with a concrete example, breaks the work into small steps, gives hints before full answers, and reviews Praveen's code as if a stranger wrote it (most serious problems first).
 - Claude writes backend code only when Praveen explicitly asks for it in that moment.
-- Setup/tooling (Phase L, run scripts, config) Claude may do, explaining each step; Praveen runs the key commands.
+- Setup/tooling (installs, project generation, config, run scripts, git commands) Claude runs itself and explains what each command does. Praveen does not need to run commands by hand; the focus is on learning and building the backend.
 - Frontend: in Phase S Praveen leads the React work with Claude guiding. Small frontend fixes outside Phase S Claude may make directly.
 - After each step, point out what concept was just learned and how it connects to the bigger picture (request → controller → service → repository → database → response).
 

@@ -1,6 +1,6 @@
 # Blueprint — Praveen's Portfolio
 
-> **Status: APPROVED v1.0 (2026-09-27).** Changes from here on: update this file first, bump the version, add a change-log line.
+> **Status: APPROVED v1.2 (approved 2026-09-27).** Changes from here on: update this file first, bump the version, add a change-log line.
 > This is the project constitution. If code and blueprint disagree, the blueprint wins. Change this file first, then the code, and add a line to the change log.
 
 ---
@@ -44,16 +44,17 @@ Browser
 ```
 
 - **Why three layers:** each layer has one job, so each can be tested and changed on its own. Example: switching one repository from hand-written SQL to JPA changes one class; the controller and service don't notice.
-- **Local development:** the Vite dev server forwards (proxies) every `/api/*` request to `http://localhost:8080`. The browser sees one origin, so no CORS setup is needed locally.
+- **Local development:** the Vite dev server forwards (proxies) every `/api/*` request to `http://localhost:8081`. The browser sees one origin, so no CORS setup is needed locally.
+- **Port:** the backend listens on the `PORT` environment variable if set (most hosts set it), otherwise 8081. (8080 is taken on Praveen's machine by the PEM HTTPD service from the EDB PostgreSQL installer.)
 - **Repo layout:** `frontend/` (React, Vite), `backend/` (Maven project), `resume/` (resume without phone number), docs at the root.
-- Host-independent: nothing may assume a specific hosting provider until Phase T.
+- Deployed early: a bare-bones backend goes live in milestone M1, and every later milestone ships to the public URL. Schedule and deadline (launch 2026-12-27) live in `task_plan.md`.
 
 ## 4. Tech stack
 
 | Part | Choice | Notes |
 |---|---|---|
 | Language (backend) | Java 25 (LTS) | Installed in Phase L next to the existing Java 22 |
-| Framework | Spring Boot | Exact version chosen on start.spring.io in Phase L, must support Java 25 |
+| Framework | Spring Boot 4.1.1 | Current stable release on start.spring.io (checked 2026-09-27); supports Java 25 |
 | Build tool | Maven 3.9.9 | Already installed |
 | Spring modules | Web, Validation, JDBC (`JdbcClient`); later Data JPA | SQL by hand first, JPA later for comparison |
 | Migrations | Flyway | Versioned SQL files create and change the schema |
@@ -291,7 +292,7 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 | Phase | Who does what |
 |---|---|
 | B — Blueprint | Claude teaches the concepts first. Praveen makes the design decisions for the schema (§5) and endpoints (§6); Claude writes the SQL/spec from those decisions, and Praveen questions and approves it. Claude drafts the rest. |
-| L — Link | Claude sets up tools and explains each step; Praveen runs the key commands. |
+| L — Link | Claude runs all setup commands and explains each step. |
 | A — Architect | **Praveen writes the code**, including the resume parser. Claude explains, gives steps and hints, reviews. |
 | S — Stylize | Praveen leads the React work; Claude guides and reviews. |
 | T — Trigger | Together. |
@@ -300,7 +301,7 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 
 1. ~~When does the resume sync run?~~ Decided: a separate command (§7).
 2. ~~AIESEC entry layout?~~ Decided: Praveen fixes the resume; the parser expects one slot order (§7). Waiting for the updated resume file.
-3. Hosting provider and domain name — Phase T.
+3. Hosting provider — chosen in milestone M1 (by 2026-10-11), because the skeleton is deployed early. Domain name — optional, M5.
 4. E2E test tool — Phase T.
 
 ## 13. Change log
@@ -312,3 +313,5 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 | 0.3 | 2026-09-27 | Schema (§5) agreed: upsert sync with natural keys, `source` column for manual rows, NULL end date = ongoing, bullets, technologies, skills and authors as arrays (`self_author` marks Praveen). 7 tables, no foreign keys. |
 | 0.4 | 2026-09-27 | Endpoints (§6): `GET /api/health`, `GET /api/resume`, `POST /api/contact`; Problem Details errors; resume sync is a separate command; AIESEC entry to be fixed in the resume. |
 | 1.0 | 2026-09-27 | **Approved by Praveen.** |
+| 1.1 | 2026-09-27 | Local backend port 8081 (`PORT` env var overrides); 8080 is in use locally. Spring Boot 4.1.1 recorded. |
+| 1.2 | 2026-09-28 | Deploy early: host chosen and skeleton deployed in M1, not Phase T. Launch fixed at 2026-12-27 (scope is cut to meet it). JPA comparison moved to the cut list. |

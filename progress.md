@@ -5,6 +5,52 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 
 ---
 
+## 2026-09-28 — Planning: deadline
+
+**Done**
+- Estimated remaining work (~47–77 h full, ~40–65 h after cuts).
+- Set the deadline: **launch 2026-12-27**, fixed date, scope is cut to meet it. ~5 h/week.
+- Milestones M1–M5 with due dates, hour budgets and "done" definitions in `task_plan.md`.
+- Deploy early: skeleton goes live in M1 (due 2026-10-11). Blueprint v1.2.
+
+**Errors**
+- Praveen's terminal ran `mvnw.cmd spring-boot:run` on Java 22 → `UnsupportedClassVersionError ... class file version 69.0 ... up to 66.0`. The terminal session predates the JDK 25 install, so it lacked the new `JAVA_HOME`; `mvnw.cmd` fell back to Oracle 22 on PATH. → Set `$env:JAVA_HOME` from the saved user setting, or restart the terminal app. Maven Enforcer check proposed.
+
+**Learned**
+- Environment variable changes only reach programs started afterwards; already open terminals keep the old values.
+- Class file version 69 = Java 25, 66 = Java 22.
+
+**Hours:** — (start logging from the next session)
+
+**Next**
+- M1: Enforcer check (pending OK), Praveen writes `GET /api/health`, choose host, deploy.
+
+---
+
+## 2026-09-27 (continued) — Phase L (Link)
+
+**Done**
+- Spring Boot 4.1.1 confirmed as current stable (start.spring.io), supports Java 25.
+- Installed Temurin JDK 25.0.4 via scoop; `JAVA_HOME` points to it. Oracle Java 22 stays first on the system PATH (left alone on purpose; we always go through Maven).
+- Generated `backend/` (Maven, Java 25, Web MVC, Validation, JDBC, PostgreSQL, Flyway, package `io.github.elementz76.portfolio`). Maven Wrapper pins Maven 3.9.16.
+- Local DB: `portfolio` + `portfolio_test`, owned by login `portfolio_app` (not a superuser). Random password in gitignored `backend/.env`; template in `.env.example`; setup script `backend/scripts/create-local-db.ps1` (Praveen ran it with the `postgres` password).
+- Backend starts, connects to PostgreSQL (HikariCP), Flyway creates `flyway_schema_history`. `GET /api/health` → 404 (no controller yet — expected).
+- Working agreement: Claude runs all setup commands.
+
+**Errors**
+- `Port 8080 was already in use` → held by the `PEMHTTPD-x64` service (Postgres Enterprise Manager, installed with EDB PostgreSQL). Backend moved to `server.port=${PORT:8081}`; blueprint v1.1.
+- Maven 3.9.9 printed "restricted method" warnings on Java 25 → gone with the wrapper's Maven 3.9.16.
+
+**Learned**
+- Startup order: settings → connection pool (proves DB access) → Flyway → web server.
+- A dedicated non-superuser DB login limits damage from bugs or attacks (least privilege).
+- A port can only be held by one program; `Get-NetTCPConnection -LocalPort N` shows who holds it.
+
+**Next**
+- Praveen writes the first controller: `GET /api/health` → `200 {"status":"UP"}`.
+
+---
+
 ## 2026-09-27 (continued) — Phase B (Blueprint): endpoints + approval
 
 **Done**
