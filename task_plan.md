@@ -52,7 +52,7 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - [x] App starts on port 8081 and Flyway connects to the database
 - [x] Commands section of `CLAUDE.md`
 - [x] Build fails with a clear message when not on Java 25 (Maven Enforcer)
-- [ ] `GET /api/health` returns 200 locally — **Praveen's first code**
+- [x] `GET /api/health` returns 200 locally — **Praveen's first code**
 - [ ] Choose host for backend + database (and later the frontend)
 - [ ] Deploy database + backend; production environment variables set
 - [ ] `GET /api/health` returns 200 on the public URL

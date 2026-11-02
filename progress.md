@@ -5,6 +5,35 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 
 ---
 
+## 2026-11-02 — Tooling: VS Code cleanup
+
+**Done**
+- Moved from Antigravity (kept crashing) to VS Code and cleaned it up. Backup of the old setup: `%USERPROFILE%\vscode-backup-2026-11-02\`.
+- New VS Code profile **Portfolio** for this repo: Red Hat Java, Maven, Java debugger + test runner, Spring Boot pack, SQLTools + PostgreSQL driver, GitLens, Error Lens, spell checker, HTML/CSS, Claude Code. Hover on, autocomplete off.
+- **Default** profile kept for DSA practice (Python/Jupyter/Colab, C/C++, SQL Server/MySQL): autocomplete and hover off.
+- Removed: Oracle Java, Code Runner, Java upgrade/Azure migration tools, Gradle, IntelliCode, Flutter/Dart, duplicate git-history extensions, Live Server, Markdown Preview Enhanced, snippet packs. Dead settings removed (Copilot, Oracle JDK 22 path, Dart, missing icon theme).
+- `.vscode/settings.json` (gitignored): Java tools use JDK 25 (`java.configuration.runtimes`); Maven sidebar uses `mvnw.cmd`.
+- Removed the leftover `.github/modernize/` folder from the Java upgrade extension (moved into the backup).
+- Committed Praveen's `HealthController` (`GET /api/health` → `200 {"status":"UP"}`, matches blueprint §6), written in an earlier session. `.\mvnw.cmd test` passes.
+
+**Errors**
+- Two Java language servers (Oracle's and Red Hat's) were active at once, and Oracle's pointed at JDK 22 (`jdk.jdkhome: c:\Oracle_JDK-22`). → Removed Oracle's extension; Red Hat's uses JDK 25.
+- `code --profile Portfolio --install-extension ...` → `Profile 'Portfolio' not found.` A profile must exist before extensions can be installed into it, and `code --profile Portfolio <folder>` did not create it because that folder was already open (VS Code just focused that window). → Created it by opening an empty folder with `--profile`, then switched this project's window to the profile.
+
+**Learned**
+- A VS Code profile is a named set of extensions and settings; each folder remembers its profile. One profile per tech stack keeps each window light.
+- Strange duplicate errors in an editor usually mean two extensions are doing the same job.
+- Ctrl+K, Ctrl+I shows a hover once, even when hover is switched off.
+
+**Hours:** 0.5
+
+**Next**
+- M1 is overdue (due 2026-10-11): choose host, deploy, `GET /api/health` on the public URL.
+- M2 is due 2026-11-08 and not started: decide cuts.
+- Tests currently connect to the `portfolio` database, not `portfolio_test`. Fix before M2 tests write data.
+
+---
+
 ## 2026-09-28 — Planning: deadline
 
 **Done**
