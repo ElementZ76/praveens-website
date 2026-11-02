@@ -14,10 +14,15 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 - `backend/Dockerfile` (two stages: JDK builds the jar, JRE runs it as a non-root user) + `.dockerignore` (keeps `.env` out of images). Not built locally: Docker isn't installed. Render's first build is the test.
 - Tests now use `portfolio_test`, via `backend/src/test/resources/config/application.properties`. Verified in the Flyway log: `Database: jdbc:postgresql://localhost:5432/portfolio_test`. `.\mvnw.cmd test` → 1 test, 0 failures.
 
+- Neon: installed the Neon CLI (`neon` 8.16.0, npm global), signed in, ran `neon init` → project **praveen-portfolio** (`flat-bonus-05649269`), region Singapore (`aws-ap-southeast-1`), PostgreSQL 18, org `praveens-org` (Free plan). Singapore so the database sits next to the Render backend.
+- `neon init` wrote three gitignored files: `.env.local` (Neon connection strings: pooled `DATABASE_URL` + direct `DATABASE_URL_UNPOOLED`), `.neon` (project link) and `.mcp.json` (Neon MCP server for Claude Code). It added `.neon` and `.mcp.json` to `.gitignore`. Used `--no-config` (no `neon.ts` or JS packages in this Java repo) and `--mcp-config-location project` (Neon MCP for this repo only).
+
 **Errors**
-- None.
+- `neon init` → `ERROR: neon skills needs Node.js 22.20.0 or newer to run the skills CLI. This process is Node.js 22.14.0.` Project, link and MCP worked; only the optional Neon skills were skipped. Retry after a Node upgrade: `neon skills -y --agent claude-code`.
+- Neon's getting-started page lists Singapore as `ws-ap-southeast-1` (typo); the real ID is `aws-ap-southeast-1`.
 
 **Learned**
+- `.mcp.json` holds an account-wide Neon API key (id 3491448): it can reach every project in every org. Keep it gitignored; revoke with `neon api-keys revoke 3491448` if it ever leaks.
 - A host has to match the kind of program it runs. Static files and short functions → Vercel. A server process that stays running → Render or similar.
 - Free web services sleep when idle. The first request after a sleep is slow (cold start).
 - Spring Boot reads `classpath:/config/application.properties` after `classpath:/application.properties`, so a file there on the test classpath overrides settings for tests only.

@@ -56,7 +56,8 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - [x] Choose host: Render (backend, Docker) + Neon (PostgreSQL) + Vercel (frontend, M4), all free
 - [x] Tests use the `portfolio_test` database, not `portfolio`
 - [x] `backend/Dockerfile` (untested locally: no Docker on this machine; Render's first build tests it)
-- [ ] Praveen creates Render + Neon accounts (Sign in with GitHub)
+- [x] Neon project `praveen-portfolio` (Singapore, PostgreSQL 18) in org `praveens-org`; Neon CLI linked to the repo
+- [ ] Praveen creates a Render account (Sign in with GitHub)
 - [ ] Deploy database + backend; production environment variables set
 - [ ] `GET /api/health` returns 200 on the public URL
 
