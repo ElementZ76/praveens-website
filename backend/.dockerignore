@@ -1,0 +1,8 @@
+# Files Docker never copies into the build. .env holds the local DB password:
+# it must never end up inside an image.
+.env
+.env.*
+target/
+scripts/
+HELP.md
+mvnw.cmd

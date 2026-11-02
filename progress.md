@@ -5,6 +5,32 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 
 ---
 
+## 2026-11-02 (continued) — M1: hosting decision, Dockerfile, test database
+
+**Done**
+- Hosting decided (blueprint v1.3), all free: **Render** runs the backend from a Docker image, **Neon** hosts PostgreSQL, **Vercel** will host the React frontend in M4. Paid hosting (~$5/month) ruled out.
+- Vercel was considered for the backend and rejected: it runs short-lived functions (JavaScript, Python, Go, …), not a Java server that stays running.
+- Working agreement changed (option A): Claude writes the resume parser and sync command. Praveen writes repositories, services, controllers and their tests. Praveen's focus: architecting the backend and connecting it to the frontend.
+- `backend/Dockerfile` (two stages: JDK builds the jar, JRE runs it as a non-root user) + `.dockerignore` (keeps `.env` out of images). Not built locally: Docker isn't installed. Render's first build is the test.
+- Tests now use `portfolio_test`, via `backend/src/test/resources/config/application.properties`. Verified in the Flyway log: `Database: jdbc:postgresql://localhost:5432/portfolio_test`. `.\mvnw.cmd test` → 1 test, 0 failures.
+
+**Errors**
+- None.
+
+**Learned**
+- A host has to match the kind of program it runs. Static files and short functions → Vercel. A server process that stays running → Render or similar.
+- Free web services sleep when idle. The first request after a sleep is slow (cold start).
+- Spring Boot reads `classpath:/config/application.properties` after `classpath:/application.properties`, so a file there on the test classpath overrides settings for tests only.
+
+**Hours:** 0.25
+
+**Next**
+- Praveen creates Render + Neon accounts (Sign in with GitHub).
+- Neon: create the database. Render: connect the repo, set root directory `backend`, set `DB_*` variables, deploy. Check `GET /api/health` on the public URL. M1 done.
+- Re-plan M2–M5 dates: M1 is 3 weeks late and M2 is due 2026-11-08. The parser moving to Claude frees most of the M2 budget.
+
+---
+
 ## 2026-11-02 — Tooling: VS Code cleanup
 
 **Done**

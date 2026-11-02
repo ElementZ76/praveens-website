@@ -46,7 +46,8 @@ praveen-website/
   To serve over http: `cd frontend; python -m http.server 5500` → http://localhost:5500
 - Backend (run from `backend/`): `.\mvnw.cmd spring-boot:run` → http://localhost:8081. Always use the Maven Wrapper (`mvnw.cmd`), never plain `mvn`.
   Needs `JAVA_HOME` = JDK 25 (set by the scoop install). Plain `java` on PATH is still Oracle 22; don't call it directly.
-- Tests (from `backend/`): `.\mvnw.cmd test`
+- Tests (from `backend/`): `.\mvnw.cmd test` — they use the `portfolio_test` database (set in `backend/src/test/resources/config/application.properties`), never `portfolio`.
+- Hosting: backend on Render (free, built from `backend/Dockerfile`), database on Neon (free), frontend on Vercel (free). Docker is not installed locally; Render builds the image.
 - Local DB setup (once, asks for the `postgres` superuser password, so Praveen runs it): `.\backend\scripts\create-local-db.ps1`
 - Settings: `backend/.env` (gitignored, holds the DB password) — template in `backend/.env.example`.
 - React dev server: filled in during Phase S.
@@ -57,9 +58,11 @@ Praveen is learning backend development and has never built a backend before.
 
 - **Design decisions are Praveen's:** for the database schema and the API endpoints, Claude teaches the concepts first and asks the design questions; Praveen answers them. Claude then writes the SQL/spec from those answers, points out mistakes in the answers plainly, and Praveen questions and approves the result.
 - **Explanations must be simple.** Use Praveen's own data (the resume) as examples, show small sample tables of rows, one idea at a time. Avoid jargon; if a term is needed, define it in one sentence. Praveen knows intermediate SQL.
-- **Backend code is written by Praveen.** Claude explains the concept first with a concrete example, breaks the work into small steps, gives hints before full answers, and reviews Praveen's code as if a stranger wrote it (most serious problems first).
-- Claude writes backend code only when Praveen explicitly asks for it in that moment.
-- Setup/tooling (installs, project generation, config, run scripts, git commands) Claude runs itself and explains what each command does. Praveen does not need to run commands by hand; the focus is on learning and building the backend.
+- **Praveen's goal is to architect the backend and connect it to the frontend correctly**, not to learn every piece of code.
+- **The API code is written by Praveen**: repositories, services, controllers and their tests. Claude explains the concept first with a concrete example, breaks the work into small steps, gives hints before full answers, and reviews Praveen's code as if a stranger wrote it (most serious problems first).
+- **The resume parser and sync command are written by Claude** (decided 2026-11-02). Praveen does not want to learn the text processing; Claude explains what they do and how they connect to the database, not how the parsing works line by line.
+- Other backend code: Claude writes it only when Praveen explicitly asks for it in that moment.
+- Setup/tooling (installs, project generation, config, Dockerfile, deploy settings, run scripts, git commands) Claude does itself and explains what each step and file does. Praveen does not need to run commands by hand; the focus is on learning and building the backend.
 - Frontend: in Phase S Praveen leads the React work with Claude guiding. Small frontend fixes outside Phase S Claude may make directly.
 - After each step, point out what concept was just learned and how it connects to the bigger picture (request → controller → service → repository → database → response).
 

@@ -53,16 +53,19 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - [x] Commands section of `CLAUDE.md`
 - [x] Build fails with a clear message when not on Java 25 (Maven Enforcer)
 - [x] `GET /api/health` returns 200 locally — **Praveen's first code**
-- [ ] Choose host for backend + database (and later the frontend)
+- [x] Choose host: Render (backend, Docker) + Neon (PostgreSQL) + Vercel (frontend, M4), all free
+- [x] Tests use the `portfolio_test` database, not `portfolio`
+- [x] `backend/Dockerfile` (untested locally: no Docker on this machine; Render's first build tests it)
+- [ ] Praveen creates Render + Neon accounts (Sign in with GitHub)
 - [ ] Deploy database + backend; production environment variables set
 - [ ] `GET /api/health` returns 200 on the public URL
 
 ## M2 — Resume API live (Phase A, part 1) · due 2026-11-08 · 20 h
 - [ ] Flyway migration: create tables
 - [ ] Flyway migration: manual entries (Prashanthi Delights)
-- [ ] Resume parser: LaTeX → plain-text objects, with unit tests on the real resume file
-- [ ] Resume sync: one transaction, idempotent, leaves manual rows alone, phone-number guard
-- [ ] Resume sync command (runs the parser + sync, outside the web server); run it against production
+- [ ] *(Claude)* Resume parser: LaTeX → plain-text objects, with unit tests on the real resume file
+- [ ] *(Claude)* Resume sync: one transaction, idempotent, leaves manual rows alone, phone-number guard
+- [ ] *(Claude)* Resume sync command (runs the parser + sync, outside the web server); run it against production
 - [ ] `GET /api/resume`: repositories → service → controller → API test
 - [ ] Deployed; `GET /api/resume` matches `blueprint.md` §6 on the public URL
 - [ ] *(cut list)* Switch one entity from `JdbcClient` to Spring Data JPA; compare the two
@@ -80,7 +83,7 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - [ ] Contact form → `POST /api/contact`, with honeypot field and labels
 - [ ] Loading, error and empty states
 - [ ] Responsive down to 360 px
-- [ ] Production CORS; frontend deployed
+- [ ] Production CORS; frontend deployed on Vercel
 - [ ] *(cut list)* Micro-animations
 
 ## M5 — Launch (Phase T) · due 2026-12-27 · 5 h

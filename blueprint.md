@@ -1,6 +1,6 @@
 # Blueprint — Praveen's Portfolio
 
-> **Status: APPROVED v1.2 (approved 2026-09-27).** Changes from here on: update this file first, bump the version, add a change-log line.
+> **Status: APPROVED v1.3 (approved 2026-09-27).** Changes from here on: update this file first, bump the version, add a change-log line.
 > This is the project constitution. If code and blueprint disagree, the blueprint wins. Change this file first, then the code, and add a line to the change log.
 
 ---
@@ -48,6 +48,11 @@ Browser
 - **Port:** the backend listens on the `PORT` environment variable if set (most hosts set it), otherwise 8081. (8080 is taken on Praveen's machine by the PEM HTTPD service from the EDB PostgreSQL installer.)
 - **Repo layout:** `frontend/` (React, Vite), `backend/` (Maven project), `resume/` (resume without phone number), docs at the root.
 - Deployed early: a bare-bones backend goes live in milestone M1, and every later milestone ships to the public URL. Schedule and deadline (launch 2026-12-27) live in `task_plan.md`.
+- **Hosting (all free plans, $0/month):**
+  - Backend: **Render** free web service, built from `backend/Dockerfile` in the GitHub repo. A free service sleeps after ~15 min without visitors; the next request waits ~30–60 s while it wakes up. The frontend's loading state covers this.
+  - Database: **Neon** free PostgreSQL.
+  - Frontend: **Vercel** Hobby plan (static React build). Vercel cannot run the Spring Boot server: it only runs short-lived functions, and Java is not one of its supported runtimes.
+  - Production settings (`DB_*`, later the CORS origin) are environment variables set in the host's dashboard (invariant 7).
 
 ## 4. Tech stack
 
@@ -55,13 +60,14 @@ Browser
 |---|---|---|
 | Language (backend) | Java 25 (LTS) | Installed in Phase L next to the existing Java 22 |
 | Framework | Spring Boot 4.1.1 | Current stable release on start.spring.io (checked 2026-09-27); supports Java 25 |
-| Build tool | Maven 3.9.9 | Already installed |
+| Build tool | Maven 3.9.16 via the Maven Wrapper (`mvnw.cmd`) | The wrapper pins the version, so every machine builds the same way |
 | Spring modules | Web, Validation, JDBC (`JdbcClient`); later Data JPA | SQL by hand first, JPA later for comparison |
 | Migrations | Flyway | Versioned SQL files create and change the schema |
 | Database | PostgreSQL 18 | Already installed locally |
 | Frontend | React + Vite, JavaScript | Built in Phase S |
 | API tests | JUnit 5 + Spring Boot Test + REST Assured | Written alongside each endpoint in Phase A |
 | E2E tests | Selenium or Playwright | Chosen in Phase T |
+| Hosting | Render (backend, Docker) · Neon (PostgreSQL) · Vercel (frontend) | Free plans; see §3 |
 
 ## 5. Data schema
 
@@ -293,7 +299,7 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 |---|---|
 | B — Blueprint | Claude teaches the concepts first. Praveen makes the design decisions for the schema (§5) and endpoints (§6); Claude writes the SQL/spec from those decisions, and Praveen questions and approves it. Claude drafts the rest. |
 | L — Link | Claude runs all setup commands and explains each step. |
-| A — Architect | **Praveen writes the code**, including the resume parser. Claude explains, gives steps and hints, reviews. |
+| A — Architect | **Praveen writes the API code**: repositories, services, controllers, their tests. Claude explains, gives steps and hints, reviews. **Claude writes the resume parser and sync command** (§7); Praveen reviews what they do, not how the text processing works. |
 | S — Stylize | Praveen leads the React work; Claude guides and reviews. |
 | T — Trigger | Together. |
 
@@ -301,7 +307,7 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 
 1. ~~When does the resume sync run?~~ Decided: a separate command (§7).
 2. ~~AIESEC entry layout?~~ Decided: Praveen fixes the resume; the parser expects one slot order (§7). Waiting for the updated resume file.
-3. Hosting provider — chosen in milestone M1 (by 2026-10-11), because the skeleton is deployed early. Domain name — optional, M5.
+3. ~~Hosting provider?~~ Decided: Render + Neon + Vercel, all free (§3). Domain name — optional, M5.
 4. E2E test tool — Phase T.
 
 ## 13. Change log
@@ -315,3 +321,4 @@ Same as the existing site. Full token table and component rules are in `CLAUDE.m
 | 1.0 | 2026-09-27 | **Approved by Praveen.** |
 | 1.1 | 2026-09-27 | Local backend port 8081 (`PORT` env var overrides); 8080 is in use locally. Spring Boot 4.1.1 recorded. |
 | 1.2 | 2026-09-28 | Deploy early: host chosen and skeleton deployed in M1, not Phase T. Launch fixed at 2026-12-27 (scope is cut to meet it). JPA comparison moved to the cut list. |
+| 1.3 | 2026-11-02 | Hosting decided: Render (backend, Docker), Neon (PostgreSQL), Vercel (frontend), all free. Claude writes the resume parser and sync; Praveen writes the API layers. Maven version corrected to the wrapper's 3.9.16. |
