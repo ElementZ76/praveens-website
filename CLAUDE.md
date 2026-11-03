@@ -48,6 +48,7 @@ praveen-website/
   Needs `JAVA_HOME` = JDK 25 (set by the scoop install). Plain `java` on PATH is still Oracle 22; don't call it directly.
 - Tests (from `backend/`): `.\mvnw.cmd test` — they use the `portfolio_test` database (set in `backend/src/test/resources/config/application.properties`), never `portfolio`.
 - Hosting: backend on Render (free, built from `backend/Dockerfile`), database on Neon (free), frontend on Vercel (free). Docker is not installed locally; Render builds the image.
+  Public backend: https://praveens-portfolio-61zd.onrender.com (only `/api/*` exists; `/` is a 404 by design). Render redeploys on every push to `main`. Neon project `praveen-portfolio` (`flat-bonus-05649269`, Singapore); its connection strings are in the gitignored `.env.local`.
 - Local DB setup (once, asks for the `postgres` superuser password, so Praveen runs it): `.\backend\scripts\create-local-db.ps1`
 - Settings: `backend/.env` (gitignored, holds the DB password) — template in `backend/.env.example`.
 - React dev server: filled in during Phase S.

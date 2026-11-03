@@ -1,6 +1,6 @@
 # Task Plan — B.L.A.S.T.
 
-**Current phase: L — Link** · **Current milestone: M1 — Live skeleton (due Sun 2026-10-11)**
+**Current phase: L — Link** · **M1 — Live skeleton: done 2026-11-03** (due 2026-10-11, 3 weeks late) · Next: M2, after Praveen approves moving on and the dates are re-planned
 
 ## Deadline
 
@@ -57,9 +57,9 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - [x] Tests use the `portfolio_test` database, not `portfolio`
 - [x] `backend/Dockerfile` (untested locally: no Docker on this machine; Render's first build tests it)
 - [x] Neon project `praveen-portfolio` (Singapore, PostgreSQL 18) in org `praveens-org`; Neon CLI linked to the repo
-- [ ] Praveen creates a Render account (Sign in with GitHub)
-- [ ] Deploy database + backend; production environment variables set
-- [ ] `GET /api/health` returns 200 on the public URL
+- [x] Render web service (free, Singapore, Docker, root dir `backend`), auto-deploys on push to `main`
+- [x] Deploy database + backend; production environment variables set (`DB_*`, `DB_SSLMODE=verify-full`)
+- [x] `GET /api/health` returns 200 on the public URL: https://praveens-portfolio-61zd.onrender.com/api/health
 
 ## M2 — Resume API live (Phase A, part 1) · due 2026-11-08 · 20 h
 - [ ] Flyway migration: create tables

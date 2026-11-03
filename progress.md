@@ -5,6 +5,30 @@ Template: **Done** · **Errors** (exact message → fix) · **Learned** · **Nex
 
 ---
 
+## 2026-11-03 — M1 done: backend live on Render + Neon
+
+**Done**
+- Render web service created by Praveen (free, Singapore, Docker, root dir `backend`, health check `/api/health`, env vars `DB_*`). First build worked on the first try: the Dockerfile is now tested.
+- `GET https://praveens-portfolio-61zd.onrender.com/api/health` → `200 {"status":"UP"}` (~0.2 s warm). **M1 done.**
+- SSL: the JDBC URL now takes `sslmode=${DB_SSLMODE:prefer}` + `sslfactory=org.postgresql.ssl.DefaultJavaSSLFactory`. Production uses `verify-full`: encrypted, and Neon's certificate is checked against Java's trusted certificates. Rehearsed locally first (app on this machine → Neon direct endpoint, `verify-full`) → Flyway connected, health 200.
+- Neon's direct endpoint (no `-pooler`) is used: HikariCP already pools connections, and Flyway works best on a direct connection.
+
+**Errors**
+- `https://praveens-portfolio-61zd.onrender.com/` → `404 {"error":"Not Found","path":"/"}`. Not a bug: no controller handles `/`. Only `/api/*` exists.
+- `.\mvnw.cmd test` → `Native memory allocation (malloc) failed to allocate 1056912 bytes`. Windows was out of memory (0.5 GB free RAM + pagefile; WSL `vmmem` 4 GB, Antigravity 1.4 GB, Edge 3.5 GB). → Praveen closed programs (4.3 GB free) → tests pass.
+
+**Learned**
+- A 404 from Spring Boot proves the server is up: something answered. A server that is down gives no answer at all, or a 502/503 from the host.
+- The same code runs on the laptop and on Render. Only environment variables differ (invariant 7).
+- `sslmode=require` only encrypts; `verify-full` also proves you are talking to the real database.
+
+**Hours:** 0.75 (2026-11-02 evening + 2026-11-03)
+
+**Next**
+- Praveen approves moving to M2 and the re-planned dates.
+
+---
+
 ## 2026-11-02 (continued) — M1: hosting decision, Dockerfile, test database
 
 **Done**
