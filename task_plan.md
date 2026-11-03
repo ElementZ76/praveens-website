@@ -1,6 +1,6 @@
 # Task Plan — B.L.A.S.T.
 
-**Current phase: L — Link** · **M1 — Live skeleton: done 2026-11-03** (due 2026-10-11, 3 weeks late) · Next: M2, after Praveen approves moving on and the dates are re-planned
+**Current phase: A — Architect** · **Current milestone: M2 — Resume API live (due Sun 2026-11-15)**
 
 ## Deadline
 
@@ -10,9 +10,9 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 | # | Milestone | Weeks | Due (Sunday) | Budget | "Done" means |
 |---|---|---|---|---|---|
 | M1 | Live skeleton | 1–2 | 2026-10-11 | 10 h | `GET /api/health` returns 200 **on the public URL**, backed by a hosted database |
-| M2 | Resume API live | 3–6 | 2026-11-08 | 20 h | `GET /api/resume` on the public URL returns the full resume, synced from `resume/praveens_resume.tex`; API tests pass |
-| M3 | Contact API live | 7–8 | 2026-11-22 | 10 h | `POST /api/contact` on the public URL saves messages; 201/400/429 tested |
-| M4 | React site live | 9–12 | 2026-12-20 | 20 h | The React site, in the existing design language, shows every resume section from the API and sends contact messages; works at 360 px |
+| M2 | Resume API live | 3–6 | ~~2026-11-08~~ **2026-11-15** | 10 h | `GET /api/resume` on the public URL returns the full resume, synced from `resume/praveens_resume.tex`; API tests pass |
+| M3 | Contact API live | 7–8 | ~~2026-11-22~~ **2026-11-29** | 10 h | `POST /api/contact` on the public URL saves messages; 201/400/429 tested |
+| M4 | React site live | 9–12 | 2026-12-20 | 15 h | The React site, in the existing design language, shows every resume section from the API and sends contact messages; works at 360 px |
 | M5 | Launch | 13 | 2026-12-27 | 5 h | Key end-to-end tests pass, `run_dev.ps1`, README; site shared |
 
 ## Rules that keep this from becoming an endless loop
@@ -25,6 +25,8 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 6. **Weeks with no time** (exams, travel): tell Claude in advance; the plan is re-cut, the launch date stays.
 
 **Cut list** (first to go → last): JPA comparison · micro-animations · E2E tests beyond 2 key flows (load page, send message) · loading/empty-state polish.
+
+**Re-plan 2026-11-03** (approved by Praveen): M1 finished 3 weeks late. M2 → 2026-11-15, M3 → 2026-11-29; M4 and M5 keep their dates. Claude writes the parser and sync, so M2 drops to 10 h of Praveen's time. **Cut:** JPA comparison, micro-animations, loading/empty-state polish (a plain loading and error message stays: §10 of the blueprint needs it). Remaining budget: 40 h = 8 weeks × 5 h.
 
 ---
 
@@ -61,31 +63,31 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - [x] Deploy database + backend; production environment variables set (`DB_*`, `DB_SSLMODE=verify-full`)
 - [x] `GET /api/health` returns 200 on the public URL: https://praveens-portfolio-61zd.onrender.com/api/health
 
-## M2 — Resume API live (Phase A, part 1) · due 2026-11-08 · 20 h
-- [ ] Flyway migration: create tables
+## M2 — Resume API live (Phase A, part 1) · due 2026-11-15 · 10 h
+- [x] Flyway migration: create tables (`V1__create_tables.sql`, same SQL as blueprint §5)
 - [ ] Flyway migration: manual entries (Prashanthi Delights)
 - [ ] *(Claude)* Resume parser: LaTeX → plain-text objects, with unit tests on the real resume file
 - [ ] *(Claude)* Resume sync: one transaction, idempotent, leaves manual rows alone, phone-number guard
 - [ ] *(Claude)* Resume sync command (runs the parser + sync, outside the web server); run it against production
 - [ ] `GET /api/resume`: repositories → service → controller → API test
 - [ ] Deployed; `GET /api/resume` matches `blueprint.md` §6 on the public URL
-- [ ] *(cut list)* Switch one entity from `JdbcClient` to Spring Data JPA; compare the two
+- [ ] ~~Switch one entity from `JdbcClient` to Spring Data JPA; compare the two~~ (cut 2026-11-03 → Later)
 
-## M3 — Contact API live (Phase A, part 2) · due 2026-11-22 · 10 h
+## M3 — Contact API live (Phase A, part 2) · due 2026-11-29 · 10 h
 - [ ] Contact: validation → honeypot → rate limit → Problem Details errors
 - [ ] API tests (201, 400, 429)
 - [ ] Deployed; works on the public URL
 
-## M4 — React site live (Phase S) · due 2026-12-20 · 20 h
+## M4 — React site live (Phase S) · due 2026-12-20 · 15 h
 - [ ] Vite + React skeleton; Vite proxies `/api` to the backend
 - [ ] Port layout and `styles.css` into React components (same design language)
 - [ ] Add sections for Education, Experience, Publications, Certifications
 - [ ] Load every resume section from the API
 - [ ] Contact form → `POST /api/contact`, with honeypot field and labels
-- [ ] Loading, error and empty states
+- [ ] Plain loading and error message (polish cut 2026-11-03)
 - [ ] Responsive down to 360 px
 - [ ] Production CORS; frontend deployed on Vercel
-- [ ] *(cut list)* Micro-animations
+- [ ] ~~Micro-animations~~ (cut 2026-11-03)
 
 ## M5 — Launch (Phase T) · due 2026-12-27 · 5 h
 - [ ] E2E tests for the 2 key flows (page loads with resume data; contact message sent) — tool: Selenium or Playwright
@@ -100,3 +102,5 @@ Budget: ~5 h/week × 13 weeks ≈ 65 h. Estimated work after cuts: ~40–65 h.
 - Admin login + page to read messages
 - Email notification on new messages
 - Resume PDF download
+- JPA comparison: switch one entity from `JdbcClient` to Spring Data JPA (cut from M2)
+- Micro-animations, loading/empty-state polish (cut from M4)
